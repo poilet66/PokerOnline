@@ -1,0 +1,35 @@
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\Poker Online.exe.config
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\Poker Online.exe
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\Poker Online.pdb
+C:\Users\rohan\source\repos\Poker Online\Poker Online\obj\Debug\Poker Online.csprojAssemblyReference.cache
+C:\Users\rohan\source\repos\Poker Online\Poker Online\obj\Debug\Poker_Online.Form1.resources
+C:\Users\rohan\source\repos\Poker Online\Poker Online\obj\Debug\Poker_Online.Properties.Resources.resources
+C:\Users\rohan\source\repos\Poker Online\Poker Online\obj\Debug\Poker Online.csproj.GenerateResource.cache
+C:\Users\rohan\source\repos\Poker Online\Poker Online\obj\Debug\Poker Online.csproj.CoreCompileInputs.cache
+C:\Users\rohan\source\repos\Poker Online\Poker Online\obj\Debug\Poker Online.exe
+C:\Users\rohan\source\repos\Poker Online\Poker Online\obj\Debug\Poker Online.pdb
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\BouncyCastle.Crypto.dll
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\Google.Protobuf.dll
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\K4os.Compression.LZ4.dll
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\K4os.Compression.LZ4.Streams.dll
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\K4os.Hash.xxHash.dll
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\MySql.Data.dll
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\Renci.SshNet.dll
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\System.Buffers.dll
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\System.Memory.dll
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\Ubiety.Dns.Core.dll
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\Zstandard.Net.dll
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\Google.Protobuf.pdb
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\Google.Protobuf.xml
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\K4os.Compression.LZ4.xml
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\K4os.Compression.LZ4.Streams.xml
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\K4os.Hash.xxHash.xml
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\MySql.Data.xml
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\Renci.SshNet.xml
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\System.Buffers.xml
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\System.Memory.xml
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\rohan\source\repos\Poker Online\Poker Online\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\rohan\source\repos\Poker Online\Poker Online\obj\Debug\Poker Online.csproj.CopyComplete
