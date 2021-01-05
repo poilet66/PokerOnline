@@ -12,7 +12,7 @@ namespace Poker_Online
     {
         private MySqlConnection con;
 
-        public DatabaseHandler() /// Make sure to surround with try/catch
+        public DatabaseHandler() 
         {
             var cs = ConfigurationManager.ConnectionStrings["freemysql"].ConnectionString;
             this.con = new MySqlConnection(cs);
@@ -24,6 +24,17 @@ namespace Poker_Online
             string sql = string.Format("SELECT {0} FROM {1}", what, database);
             using var cmd = new MySqlCommand(sql, con);
             return cmd.ExecuteReader();
+        }
+
+
+        public MySqlConnection getConnection()
+        {
+            return con;
+        }
+
+        public void close()
+        {
+            con.Close();
         }
     }
 }

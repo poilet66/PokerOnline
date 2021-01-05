@@ -49,6 +49,7 @@ namespace Poker_Online
             this.mainScreen = new System.Windows.Forms.TabPage();
             this.existUserButton = new System.Windows.Forms.Button();
             this.newUserButton = new System.Windows.Forms.Button();
+            this.signupStatusLabel = new System.Windows.Forms.Label();
             this.pageHandler.SuspendLayout();
             this.loginScreen.SuspendLayout();
             this.signupScreen.SuspendLayout();
@@ -144,6 +145,7 @@ namespace Poker_Online
             // 
             this.signupScreen.BackgroundImage = global::Poker_Online.Properties.Resources.image;
             this.signupScreen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.signupScreen.Controls.Add(this.signupStatusLabel);
             this.signupScreen.Controls.Add(this.signupRegisterButton);
             this.signupScreen.Controls.Add(this.signupGoBackButton);
             this.signupScreen.Controls.Add(this.signupPasswordTextbox);
@@ -244,6 +246,15 @@ namespace Poker_Online
             this.newUserButton.UseVisualStyleBackColor = true;
             this.newUserButton.Click += new System.EventHandler(this.newUserButton_Click);
             // 
+            // signupStatusLabel
+            // 
+            this.signupStatusLabel.AutoSize = true;
+            this.signupStatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.signupStatusLabel.Location = new System.Drawing.Point(243, 211);
+            this.signupStatusLabel.Name = "signupStatusLabel";
+            this.signupStatusLabel.Size = new System.Drawing.Size(0, 20);
+            this.signupStatusLabel.TabIndex = 6;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -282,6 +293,7 @@ namespace Poker_Online
         private System.Windows.Forms.TextBox signupUserTextbox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label signupStatusLabel;
     }
 }
 
