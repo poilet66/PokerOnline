@@ -93,6 +93,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game.cs" />
+    <Compile Include="Hand.cs" />
+    <Compile Include="NonRealCardException.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="StringUtils.cs" />
     <Compile Include="DatabaseHandler.cs" />
     <Compile Include="Form1.cs">

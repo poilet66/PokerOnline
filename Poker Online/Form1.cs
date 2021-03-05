@@ -19,6 +19,7 @@ namespace Poker_Online
         {
             InitializeComponent();
             pageHandler.SelectedTab = mainScreen;
+            pageHandler.SelectedTab = gameScreen;
             this.db = new DatabaseHandler(); //needs to be surrounded in try/catch!!! how will error messaging work?
         }
 
@@ -55,7 +56,6 @@ namespace Poker_Online
 
         private void signupRegisterButton_Click(object sender, EventArgs e)
         {
-
             if (StringUtils.isEmptyString(signupUserTextbox.Text))
             {
                 MessageBox.Show("Cannot have an empty username.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -92,17 +92,40 @@ namespace Poker_Online
                 return;
             }
 
+            //Maybe turn this into a function?
             var sql = "INSERT INTO users(username, password) VALUES(@username, @password)";
             using var cmd = new MySqlCommand(sql, db.getConnection());
             cmd.Parameters.AddWithValue("@username", signupUserTextbox.Text);
             cmd.Parameters.AddWithValue("@password", signupPasswordTextbox.Text);
-            cmd.Prepare();
+            cmd.Prepare();  
             cmd.ExecuteNonQuery();
 
             signupUserTextbox.Text = "";
             signupPasswordTextbox.Text = "";
             signupStatusLabel.Text = "Account registered!";
             signupStatusLabel.Show();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        public Choice getPlayerChoice(Player player)
+        {
+            menuBox.Show();
+            trackBar1.Minimum = player.getGame();
+            trackBar1.Maximum = player.getChips();
+        }
+
+        private void menuBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            raiseChipsLbl.Text = "" + trackBar1.Value;
         }
     }
 }
