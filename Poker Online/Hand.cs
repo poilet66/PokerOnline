@@ -63,6 +63,11 @@ namespace Poker_Online
             this.cards = cards;
         }
 
+        public Hand()
+        {
+            this.cards = new List<Card>();
+        }
+
         public void addCard(Card card)
         {
             if (cards.Count == 7)
@@ -76,6 +81,32 @@ namespace Poker_Online
         public List<Card> getCards()
         {
             return cards;
+        }
+
+        public int getHighestRank()
+        {
+            int[] ranks = new int[7];
+            int count = 0;
+            foreach (Card card in cards)
+            {
+                ranks[count] = card.getRank();
+                count++;
+            }
+            ranks = bubbleSort(ranks);
+            return ranks[ranks.Count() - 1];
+        }
+
+        public int getHighestSuit()
+        {
+            int[] suits = new int[7];
+            int count = 0;
+            foreach (Card card in cards)
+            {
+                suits[count] = card.getSuit();
+                count++;
+            }
+            suits = bubbleSort(suits);
+            return suits[suits.Count() - 1];
         }
 
         public static int[] bubbleSort(int[] array)
@@ -333,14 +364,14 @@ namespace Poker_Online
 
     public enum HandType
     {
-        HIGH_CARD,
-        ONE_PAIR,
-        TWO_PAIR,
-        THREE_OF_A_KIND,
-        STRAIGHT,
-        FLUSH,
-        FULL_HOUSE,
-        FOUR_OF_A_KIND,
-        STRAIGHT_FLUSH
+        HIGH_CARD = 1,
+        ONE_PAIR = 2,
+        TWO_PAIR = 3,
+        THREE_OF_A_KIND = 4,
+        STRAIGHT = 5,
+        FLUSH = 6,
+        FULL_HOUSE = 7,
+        FOUR_OF_A_KIND = 8,
+        STRAIGHT_FLUSH = 9
     }
 }

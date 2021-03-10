@@ -26,6 +26,33 @@ namespace Poker_Online
             return cmd.ExecuteReader();
         }
 
+        public bool userExists(string database, string user, string pass)
+        {
+            bool ret = false;
+            string sql = string.Format("SELECT COUNT(*) FROM {0} WHERE username = '{1}' AND password = '{2}'", database, user, pass);
+            using var cmd = new MySqlCommand(sql, con);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while(rdr.Read())
+            {
+                ret = rdr.GetInt32(0) > 0;
+            }
+            rdr.Close();
+            return ret;
+        }
+
+        public int getUserChips(string username)
+        {
+            int ret = 0;
+            string sql = string.Format("SELECT chips FROM users WHERE (username = '{0}')", username);
+            using var cmd = new MySqlCommand(sql, con);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while(rdr.Read())
+            {
+                ret = rdr.GetInt32(0);
+            }
+            rdr.Close();
+            return ret;
+        }
 
         public MySqlConnection getConnection()
         {

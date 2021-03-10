@@ -51,17 +51,26 @@ namespace Poker_Online
             this.existUserButton = new System.Windows.Forms.Button();
             this.newUserButton = new System.Windows.Forms.Button();
             this.loggedInMainScreen = new System.Windows.Forms.TabPage();
+            this.startGameButton = new System.Windows.Forms.Button();
+            this.playerCountLbl = new System.Windows.Forms.Label();
+            this.trackBar2 = new System.Windows.Forms.TrackBar();
             this.gameScreen = new System.Windows.Forms.TabPage();
+            this.winnerLbl = new System.Windows.Forms.Label();
             this.menuBox = new System.Windows.Forms.GroupBox();
+            this.raiseChipsLbl = new System.Windows.Forms.Label();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.raiseButton = new System.Windows.Forms.Button();
             this.callButton = new System.Windows.Forms.Button();
             this.foldButton = new System.Windows.Forms.Button();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.raiseChipsLbl = new System.Windows.Forms.Label();
+            this.loginLabel = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.playerChipLabel = new System.Windows.Forms.Label();
             this.pageHandler.SuspendLayout();
             this.loginScreen.SuspendLayout();
             this.signupScreen.SuspendLayout();
             this.mainScreen.SuspendLayout();
+            this.loggedInMainScreen.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             this.gameScreen.SuspendLayout();
             this.menuBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -84,6 +93,7 @@ namespace Poker_Online
             // 
             this.loginScreen.BackgroundImage = global::Poker_Online.Properties.Resources.image2;
             this.loginScreen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.loginScreen.Controls.Add(this.loginLabel);
             this.loginScreen.Controls.Add(this.loginPageGoBackButton);
             this.loginScreen.Controls.Add(this.loginButton);
             this.loginScreen.Controls.Add(this.label2);
@@ -270,6 +280,11 @@ namespace Poker_Online
             // 
             // loggedInMainScreen
             // 
+            this.loggedInMainScreen.Controls.Add(this.playerChipLabel);
+            this.loggedInMainScreen.Controls.Add(this.label5);
+            this.loggedInMainScreen.Controls.Add(this.startGameButton);
+            this.loggedInMainScreen.Controls.Add(this.playerCountLbl);
+            this.loggedInMainScreen.Controls.Add(this.trackBar2);
             this.loggedInMainScreen.Location = new System.Drawing.Point(4, 22);
             this.loggedInMainScreen.Name = "loggedInMainScreen";
             this.loggedInMainScreen.Size = new System.Drawing.Size(934, 704);
@@ -277,8 +292,38 @@ namespace Poker_Online
             this.loggedInMainScreen.Text = "tabPage1";
             this.loggedInMainScreen.UseVisualStyleBackColor = true;
             // 
+            // startGameButton
+            // 
+            this.startGameButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.startGameButton.Location = new System.Drawing.Point(205, 88);
+            this.startGameButton.Name = "startGameButton";
+            this.startGameButton.Size = new System.Drawing.Size(95, 34);
+            this.startGameButton.TabIndex = 2;
+            this.startGameButton.Text = "Start Now";
+            this.startGameButton.UseVisualStyleBackColor = true;
+            this.startGameButton.Click += new System.EventHandler(this.startGameButton_Click);
+            // 
+            // playerCountLbl
+            // 
+            this.playerCountLbl.AutoSize = true;
+            this.playerCountLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.playerCountLbl.Location = new System.Drawing.Point(58, 66);
+            this.playerCountLbl.Name = "playerCountLbl";
+            this.playerCountLbl.Size = new System.Drawing.Size(125, 20);
+            this.playerCountLbl.TabIndex = 1;
+            this.playerCountLbl.Text = "2 players playing";
+            // 
+            // trackBar2
+            // 
+            this.trackBar2.Location = new System.Drawing.Point(62, 102);
+            this.trackBar2.Name = "trackBar2";
+            this.trackBar2.Size = new System.Drawing.Size(104, 45);
+            this.trackBar2.TabIndex = 0;
+            this.trackBar2.Scroll += new System.EventHandler(this.trackBar2_Scroll);
+            // 
             // gameScreen
             // 
+            this.gameScreen.Controls.Add(this.winnerLbl);
             this.gameScreen.Controls.Add(this.menuBox);
             this.gameScreen.Location = new System.Drawing.Point(4, 22);
             this.gameScreen.Name = "gameScreen";
@@ -286,6 +331,16 @@ namespace Poker_Online
             this.gameScreen.TabIndex = 4;
             this.gameScreen.Text = "tabPage1";
             this.gameScreen.UseVisualStyleBackColor = true;
+            // 
+            // winnerLbl
+            // 
+            this.winnerLbl.AutoSize = true;
+            this.winnerLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.winnerLbl.Location = new System.Drawing.Point(441, 79);
+            this.winnerLbl.Name = "winnerLbl";
+            this.winnerLbl.Size = new System.Drawing.Size(0, 20);
+            this.winnerLbl.TabIndex = 1;
+            this.winnerLbl.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // menuBox
             // 
@@ -301,43 +356,6 @@ namespace Poker_Online
             this.menuBox.TabIndex = 0;
             this.menuBox.TabStop = false;
             this.menuBox.Text = "Menu";
-            this.menuBox.Enter += new System.EventHandler(this.menuBox_Enter);
-            // 
-            // raiseButton
-            // 
-            this.raiseButton.Location = new System.Drawing.Point(331, 81);
-            this.raiseButton.Name = "raiseButton";
-            this.raiseButton.Size = new System.Drawing.Size(102, 35);
-            this.raiseButton.TabIndex = 2;
-            this.raiseButton.Text = "Raise";
-            this.raiseButton.UseVisualStyleBackColor = true;
-            // 
-            // callButton
-            // 
-            this.callButton.Location = new System.Drawing.Point(181, 81);
-            this.callButton.Name = "callButton";
-            this.callButton.Size = new System.Drawing.Size(102, 35);
-            this.callButton.TabIndex = 1;
-            this.callButton.Text = "Call";
-            this.callButton.UseVisualStyleBackColor = true;
-            // 
-            // foldButton
-            // 
-            this.foldButton.Location = new System.Drawing.Point(29, 81);
-            this.foldButton.Name = "foldButton";
-            this.foldButton.Size = new System.Drawing.Size(102, 35);
-            this.foldButton.TabIndex = 0;
-            this.foldButton.Text = "Fold";
-            this.foldButton.UseVisualStyleBackColor = true;
-            this.foldButton.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // trackBar1
-            // 
-            this.trackBar1.Location = new System.Drawing.Point(329, 122);
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(104, 45);
-            this.trackBar1.TabIndex = 3;
-            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
             // raiseChipsLbl
             // 
@@ -349,6 +367,74 @@ namespace Poker_Online
             this.raiseChipsLbl.TabIndex = 4;
             this.raiseChipsLbl.Text = "0";
             this.raiseChipsLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.Location = new System.Drawing.Point(329, 122);
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(104, 45);
+            this.trackBar1.TabIndex = 3;
+            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            // 
+            // raiseButton
+            // 
+            this.raiseButton.Location = new System.Drawing.Point(331, 81);
+            this.raiseButton.Name = "raiseButton";
+            this.raiseButton.Size = new System.Drawing.Size(102, 35);
+            this.raiseButton.TabIndex = 2;
+            this.raiseButton.Text = "Raise";
+            this.raiseButton.UseVisualStyleBackColor = true;
+            this.raiseButton.Click += new System.EventHandler(this.raiseButton_Click);
+            // 
+            // callButton
+            // 
+            this.callButton.Location = new System.Drawing.Point(181, 81);
+            this.callButton.Name = "callButton";
+            this.callButton.Size = new System.Drawing.Size(102, 35);
+            this.callButton.TabIndex = 1;
+            this.callButton.Text = "Call";
+            this.callButton.UseVisualStyleBackColor = true;
+            this.callButton.Click += new System.EventHandler(this.callButton_Click);
+            // 
+            // foldButton
+            // 
+            this.foldButton.Location = new System.Drawing.Point(29, 81);
+            this.foldButton.Name = "foldButton";
+            this.foldButton.Size = new System.Drawing.Size(102, 35);
+            this.foldButton.TabIndex = 0;
+            this.foldButton.Text = "Fold";
+            this.foldButton.UseVisualStyleBackColor = true;
+            this.foldButton.Click += new System.EventHandler(this.foldButton_Click);
+            // 
+            // loginLabel
+            // 
+            this.loginLabel.AutoSize = true;
+            this.loginLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.loginLabel.Location = new System.Drawing.Point(340, 224);
+            this.loginLabel.Name = "loginLabel";
+            this.loginLabel.Size = new System.Drawing.Size(33, 20);
+            this.loginLabel.TabIndex = 6;
+            this.loginLabel.Text = "null";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(0, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(35, 13);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "label5";
+            // 
+            // playerChipLabel
+            // 
+            this.playerChipLabel.AutoSize = true;
+            this.playerChipLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.playerChipLabel.Location = new System.Drawing.Point(58, 169);
+            this.playerChipLabel.Name = "playerChipLabel";
+            this.playerChipLabel.Size = new System.Drawing.Size(33, 20);
+            this.playerChipLabel.TabIndex = 4;
+            this.playerChipLabel.Text = "null";
+            this.playerChipLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Form1
             // 
@@ -364,7 +450,11 @@ namespace Poker_Online
             this.signupScreen.ResumeLayout(false);
             this.signupScreen.PerformLayout();
             this.mainScreen.ResumeLayout(false);
+            this.loggedInMainScreen.ResumeLayout(false);
+            this.loggedInMainScreen.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
             this.gameScreen.ResumeLayout(false);
+            this.gameScreen.PerformLayout();
             this.menuBox.ResumeLayout(false);
             this.menuBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
@@ -401,6 +491,13 @@ namespace Poker_Online
         private System.Windows.Forms.Button callButton;
         private System.Windows.Forms.Label raiseChipsLbl;
         private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.Label winnerLbl;
+        private System.Windows.Forms.Button startGameButton;
+        private System.Windows.Forms.Label playerCountLbl;
+        private System.Windows.Forms.TrackBar trackBar2;
+        private System.Windows.Forms.Label loginLabel;
+        private System.Windows.Forms.Label playerChipLabel;
+        private System.Windows.Forms.Label label5;
     }
 }
 

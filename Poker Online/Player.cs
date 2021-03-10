@@ -14,12 +14,16 @@ namespace Poker_Online
         public bool allIn, areOut;
         protected Game currentGame;
 
-        public IPlayer(int chips, Game game)
+        public IPlayer(int chips)
         {
-            this.currentGame = game;
+            this.hand = new Hand();
             this.chips = chips;
         }
-        public abstract void onTurn();
+
+        /**
+         * Returns true if they raised
+         **/
+        public abstract bool onTurn();
 
         public bool isBust()
         {
@@ -38,6 +42,11 @@ namespace Poker_Online
         public void setChips(int amount)
         {
             chips = amount;
+        }
+
+        public void setGame(Game game)
+        {
+            this.currentGame = game;
         }
 
         public Game getGame()
@@ -64,14 +73,15 @@ namespace Poker_Online
     public class AIPlayer : IPlayer
     {
         private int ID;
-        public AIPlayer(int chips, Game game) : base(chips, game)
+        Game game;
+        public AIPlayer(int chips, Game game) : base(chips)
         {
-
+            this.game = game;
         }
 
-        public override void onTurn()
+        public override bool onTurn()
         {
-            Console.WriteLine("Hi");
+            return true;
         }
 
         public int getID()
@@ -81,28 +91,8 @@ namespace Poker_Online
 
         public Choice pickChoice()
         {
-            Random rnd = new Random();
-            if (this.currentGame.canCheck) //if player is able to check
-            {
-                switch (rnd.Next(1, 5))
-                {
-                    case (1):
-                        return new Fold();
-                    case (2):
-                        int amountToRaise = rnd.Next(currentGame.getSmallBlind(), chips);
-                        this.allIn = (amountToRaise == chips); //set allin value appropriately
-                        return new Raise(amountToRaise); //return a raise between the minimum bet and going all in
-                    default:
-                        return new Fold(); //make them fold in case of error
-                }
-            }
-            switch (rnd.Next(1, 3))
-            {
-                case (1):
-                    return new Fold();
-                case (2):
-
-            }
+            //TODO: AIPlayer choice AI, can just be random, but weight towards not folding so games don't end prematurely
+            return new Fold();
         }
     }
 
@@ -111,37 +101,57 @@ namespace Poker_Online
 
         private Form1 form;
 
-        public Player(Form1 form, int chips, Game game) : base(chips, game)
+        public Player(Form1 form, int chips) : base(chips)
         {
             this.form = form;
         }
 
-        public override void onTurn()
+        /**
+         * Player choice logic
+         **/
+        public override bool onTurn()
         {
-            Choice choice = showChoiceMenu();
+            Choice choice = getChoice();
 
             if(typeof(Fold).IsInstanceOfType(choice)) //if they folded
             {
-
+                areOut = true;
+                return false;
             }
             if(typeof(Call).IsInstanceOfType(choice))
             {
-
+                getGame().bet(getGame().getCurrentBetToPlay(), this);
+                return false;
             }
             if(typeof(Raise).IsInstanceOfType(choice))
             {
-
+                Raise raise = (Raise) choice;
+                getGame().setCurrentBetToPlay(getGame().getCurrentBetToPlay() + raise.byHowMuch);
+                getGame().bet(getGame().getCurrentBetToPlay() + raise.byHowMuch, this);
+                return true;
             }
+            return false;
         }
 
         public Choice getChoice()
         {
-            form.getPlayerChoice(this);
+            return form.getPlayerChoice(this);
         }
 
+        public void showWinnerText(string name, int pot)
+        {
+            form.showWinnerText(name, pot);
+        }
+
+        public void startGame()
+        {
+            form.startGame(getGame());
+        }
     }
 
-    //Are these needed? Why not just functions for each choice and then use the Game field to access and do the relative logic
+    /**
+     * Choice classes
+     **/
     public abstract class Choice
     {
 
@@ -163,10 +173,9 @@ namespace Poker_Online
 
     public class Call : Choice //check is just call of 0
     {
-        public int amountToCall;
-        public Call(int amount)
+        public Call()
         {
-            this.amountToCall = amount;
+
         }
     }
 
