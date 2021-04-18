@@ -43,7 +43,6 @@ namespace Poker_Online
                 players.Add(new AIPlayer(5000, this)); //hard coded that all aiplayers start with 5000 chips but this can change
             }
             realPlayer.setGame(this);
-            realPlayer.startGame();
             players.Add(realPlayer);
             foreach(IPlayer player in players) //deal each player 2 cards
             {
@@ -51,6 +50,10 @@ namespace Poker_Online
                 {
                     player.getHand().addCard(this.deck.drawCard());
                 }
+            }
+            foreach (IPlayer player in players)
+            {
+                player.setOriginalHand(player.getHand());
             }
             onStart();
         }
@@ -60,6 +63,11 @@ namespace Poker_Online
          * Getters and setter
          * =============================
          **/
+
+        public List<IPlayer> getPlayers()
+        {
+            return players;
+        }
         public IPlayer getLastPlayerToRaise()
         {
             return lastPlayerToRaise;
@@ -117,6 +125,46 @@ namespace Poker_Online
             }
         }
 
+        private IPlayer getWinner()
+        {
+            HandType highestHand = HandType.HIGH_CARD;
+            List<IPlayer> playersWithHighestHand = new List<IPlayer>();
+            foreach (IPlayer player in players)
+            {
+                if (player.areOut) continue; //if they're out they can't be eligible to win
+                if (player.getHand().getBestHand() > highestHand) //if their hand is better
+                {
+                    playersWithHighestHand.Clear();
+                    playersWithHighestHand.Add(player);
+                }
+                else if (player.getHand().getBestHand() == highestHand) //or same as best
+                {
+                    playersWithHighestHand.Add(player);
+                }
+            }
+            if (playersWithHighestHand.Count == 1) //if no players have equal best hand
+            {
+                return playersWithHighestHand[0]; //return player with highest hand
+            }
+            //if all players managed to fold somehow this would throw NPE
+            IPlayer playerWithHighestRank = playersWithHighestHand[0];
+            foreach (IPlayer highHandPlayer in playersWithHighestHand)
+            {
+                if (highHandPlayer.getHand().getHighestRank() > playerWithHighestRank.getHand().getHighestRank())
+                {
+                    playerWithHighestRank = highHandPlayer;
+                }
+            }
+            return playerWithHighestRank;
+        }
+
+        /**
+         * =============================
+         * Game/Round Logic
+         * =============================
+         **/
+
+
         /**
          * Will run every round, returns false if was the final round and game is over
          **/
@@ -136,7 +184,7 @@ namespace Poker_Online
             {
                 bet(smallBlind, players[playerNumber]);
                 playerNumber++;
-                bet(smallBlind, players[playerNumber]);
+                bet(smallBlind * 2, players[playerNumber]);
                 playerNumber++; //skip to third player as first two have already bet
             }
             if(round == 2) //draw 3 cards on second round 
@@ -173,22 +221,31 @@ namespace Poker_Online
             while(!everyPlayerMet) //keep looping through players doing their turn until every player is met
             {
                 everyPlayerMet = true;
-                for (int i = playerNumber; i <= players.Count; i++)
+                for (int i = playerNumber; i <= players.Count - 1; i++)
                 {
                     IPlayer player = players[i];
-                    if (player.isBust() || player.allIn || player.isOutForRound()) continue; //if player is bust, all in or out for this hand of cards just skip them
+                    if (player.isBust() || player.allIn || player.isOutForRound())
+                    {
+                         //if player is bust, all in or out for this hand of cards just skip them
+                    }
                     if (player.onTurn()) //if they raise we need to change everyPlayerMet to false
                     {
                         everyPlayerMet = false;
                     }
+                    Console.WriteLine(everyPlayerMet);
                 }
                 playerNumber = 0;
             }
+            round++;
             return true;
         }
 
+        /*
+         * Will run upon instantiation of the game
+         */
         public void onStart()
         {
+            realPlayer.getForm().showPlayersCards(this, true);
             inProgress = true;
             resetPot();
             while(inProgress) //main game loop
@@ -198,59 +255,35 @@ namespace Poker_Online
             onEnd();
         }
 
+        /*
+         * Will run once all of the rounds have concluded
+         */
         public void onEnd()
         {
+            //show all players cards 
+            realPlayer.getForm().showPlayersCards(this, false);
             String winnerName;
             inProgress = false;
             this.winner = getWinner();
+            //if AI player won
             if (typeof(AIPlayer).IsInstanceOfType(winner))
             {
                 AIPlayer AIWinner = (AIPlayer)winner;
                 winnerName = "AIPlayer ID#" + AIWinner.getID();
+                realPlayer.getForm().updatePlayerChips(realPlayer.getUsername(), realPlayer.getChips());
             }
-            else
+            else //if real player won
             {
                 Player PlayerWinner = (Player)winner;
                 winnerName = "You";
+                //update chips
+                realPlayer.updateChips(realPlayer.getChips() + pot); //update player's chips
             }
             //show winner name, show all in players cards and give winner the money and update everyones database entry
             realPlayer.showWinnerText(winnerName, this.pot);
-            //TODO: update players chips and database entry
             round = 1;
         }
 
-        private IPlayer getWinner()
-        {
-            HandType highestHand = HandType.HIGH_CARD;
-            List<IPlayer> playersWithHighestHand = new List<IPlayer>();
-            foreach(IPlayer player in players)
-            {
-                if (player.areOut) continue; //if they're out they can't be eligible to win
-                if(player.getHand().getBestHand() > highestHand) //if their hand is better
-                {
-                    playersWithHighestHand.Clear();
-                    playersWithHighestHand.Add(player);
-                }
-                else if(player.getHand().getBestHand() == highestHand) //or same as best
-                {
-                    playersWithHighestHand.Add(player);
-                }
-            }
-            if(playersWithHighestHand.Count == 1) //if no players have equal best hand
-            {
-                return playersWithHighestHand[0]; //return player with highest hand
-            }
-            //if all players managed to fold somehow this would throw NPE
-            IPlayer playerWithHighestRank = playersWithHighestHand[0];
-            foreach(IPlayer highHandPlayer in playersWithHighestHand)
-            {
-                if(highHandPlayer.getHand().getHighestRank() > playerWithHighestRank.getHand().getHighestRank())
-                {
-                    playerWithHighestRank = highHandPlayer;
-                }
-            }
-            return playerWithHighestRank;
-        }
     }
 
 }

@@ -8,11 +8,25 @@ namespace Poker_Online
 {
     public class Card
     {
+
+        /**
+         * =============================
+         * Fields
+         * =============================
+         **/
+
         private static readonly string[] RANKS = { "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King" };
         private static readonly string[] SUITS = { "Clubs", "Diamonds", "Hearts", "Spades" };
 
         private int rank;
         private int suit;
+
+
+        /**
+         * =============================
+         * Construct
+         * =============================
+         **/
 
         public Card(int rank, int suit)
         {
@@ -27,6 +41,18 @@ namespace Poker_Online
             }
         }
 
+        /**
+         * =============================
+         * Getters
+         * =============================
+         **/
+        public string getFileName()
+        {
+            string fileName = "";
+            fileName += getRank().ToString();
+            fileName += getSuitName()[0];
+            return fileName;
+        }
         public string getSuitName()
         {
             return SUITS[suit - 1];
@@ -55,9 +81,18 @@ namespace Poker_Online
 
     public class Hand
     {
+        /**
+         * =============================
+         * Fields
+         * =============================
+         **/
         private List<Card> cards;
-        private HandType type;
 
+        /**
+         * =============================
+         * Constructors
+         * =============================
+         **/
         public Hand(List<Card> cards)
         {
             this.cards = cards;
@@ -68,6 +103,22 @@ namespace Poker_Online
             this.cards = new List<Card>();
         }
 
+        /**
+         * =============================
+         * Getters / Setters
+         * =============================
+         **/
+        public List<Card> getCards()
+        {
+            return cards;
+        }
+
+        /**
+         * =============================
+         * General Utility
+         * =============================
+         **/
+
         public void addCard(Card card)
         {
             if (cards.Count == 7)
@@ -76,37 +127,6 @@ namespace Poker_Online
                 return;
             }
             cards.Add(card);
-        }
-
-        public List<Card> getCards()
-        {
-            return cards;
-        }
-
-        public int getHighestRank()
-        {
-            int[] ranks = new int[7];
-            int count = 0;
-            foreach (Card card in cards)
-            {
-                ranks[count] = card.getRank();
-                count++;
-            }
-            ranks = bubbleSort(ranks);
-            return ranks[ranks.Count() - 1];
-        }
-
-        public int getHighestSuit()
-        {
-            int[] suits = new int[7];
-            int count = 0;
-            foreach (Card card in cards)
-            {
-                suits[count] = card.getSuit();
-                count++;
-            }
-            suits = bubbleSort(suits);
-            return suits[suits.Count() - 1];
         }
 
         public static int[] bubbleSort(int[] array)
@@ -132,6 +152,38 @@ namespace Poker_Online
                 }
             }
             return array;
+        }
+
+        /**
+         * =============================
+         * Hand Comparsion Logic
+         * =============================
+         **/
+
+        public int getHighestRank()
+        {
+            int[] ranks = new int[7];
+            int count = 0;
+            foreach (Card card in cards)
+            {
+                ranks[count] = card.getRank();
+                count++;
+            }
+            ranks = bubbleSort(ranks);
+            return ranks[ranks.Count() - 1];
+        }
+
+        public int getHighestSuit()
+        {
+            int[] suits = new int[7];
+            int count = 0;
+            foreach (Card card in cards)
+            {
+                suits[count] = card.getSuit();
+                count++;
+            }
+            suits = bubbleSort(suits);
+            return suits[suits.Count() - 1];
         }
 
         public HandType getBestHand()
@@ -168,10 +220,6 @@ namespace Poker_Online
                 return HandType.THREE_OF_A_KIND;
             }
             List<int> pairedRanks = containsPair();
-            foreach (int item in pairedRanks)
-            {
-                Console.WriteLine(item);
-            }
             switch (pairedRanks.Count)
             {
                 case (3):
@@ -301,7 +349,7 @@ namespace Poker_Online
                     pairedRanks.Add(rank);
                 }
             }
-            return pairedRanks; // TODO: Either organise the output of this or ensure you do when using it
+            return pairedRanks;
         }
 
         private int containsFourOfKind()
@@ -332,7 +380,20 @@ namespace Poker_Online
     public class Deck
     {
 
+        /**
+         * =============================
+         * Fields
+         * =============================
+         **/
+
         private Queue<Card> deck = new Queue<Card>();
+
+
+        /**
+         * =============================
+         * Constructors
+         * =============================
+         **/
 
         /**
          * Creates a shuffled Queue of cards, this will be usefull as it makes drawing a card from the deck super easy and secure as only the top element can be accessed,
@@ -356,11 +417,23 @@ namespace Poker_Online
             }
         }
 
+        /**
+         * =============================
+         * General Methods
+         * =============================
+         **/
+
         public Card drawCard()
         {
             return deck.Dequeue();
         }
     }
+
+        /**
+         * =============================
+         * Enum
+         * =============================
+         **/
 
     public enum HandType
     {

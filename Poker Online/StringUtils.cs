@@ -10,6 +10,12 @@ namespace Poker_Online
     class StringUtils
     {
 
+        /**
+         * =============================
+         * Static Utility Methods
+         * =============================
+         **/
+
         public static bool isEmptyString(string txt)
         {
             return (Regex.IsMatch(txt, @"^$"));
@@ -17,9 +23,7 @@ namespace Poker_Online
 
         public static bool isValidPassword(string txt)
         {
-
-            //return (Regex.IsMatch(txt, @"^(?=[A-Z]+)(?=[0-9]+)(?=.*[!@£$#&*()]).{8,}$"));
-            return (Regex.IsMatch(txt, @"^(?=.*[A - Z])(?=.*[!@#$&*])(?=.*[0-9]).{8,}$"));
+            return (Regex.IsMatch(txt, @"^(?=.{8,}$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).*$"));
         }
 
     }

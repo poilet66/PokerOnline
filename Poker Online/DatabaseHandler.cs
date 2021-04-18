@@ -10,8 +10,18 @@ namespace Poker_Online
 {
     class DatabaseHandler
     {
+        /**
+        * =============================
+        * Fields
+        * =============================
+        **/
         private MySqlConnection con;
 
+        /**
+        * =============================
+        * Constructors
+        * =============================
+        **/
         public DatabaseHandler() 
         {
             var cs = ConfigurationManager.ConnectionStrings["freemysql"].ConnectionString;
@@ -19,6 +29,21 @@ namespace Poker_Online
             con.Open();
         }
 
+        /**
+        * =============================
+        * Getters
+        * =============================
+        **/
+        public MySqlConnection getConnection()
+        {
+            return con;
+        }
+
+        /**
+        * =============================
+        * Utility Methods
+        * =============================
+        **/
         public MySqlDataReader select(string what, string database)
         {
             string sql = string.Format("SELECT {0} FROM {1}", what, database);
@@ -26,11 +51,14 @@ namespace Poker_Online
             return cmd.ExecuteReader();
         }
 
-        public bool userExists(string database, string user, string pass)
+        public bool userExists(string user, string pass)
         {
             bool ret = false;
-            string sql = string.Format("SELECT COUNT(*) FROM {0} WHERE username = '{1}' AND password = '{2}'", database, user, pass);
+            string sql = "SELECT COUNT(*) FROM users WHERE username = @username AND password = @password";
             using var cmd = new MySqlCommand(sql, con);
+            cmd.Parameters.AddWithValue("@username", user);
+            cmd.Parameters.AddWithValue("@password", pass);
+            cmd.Prepare();
             MySqlDataReader rdr = cmd.ExecuteReader();
             while(rdr.Read())
             {
@@ -54,9 +82,23 @@ namespace Poker_Online
             return ret;
         }
 
-        public MySqlConnection getConnection()
+        public void updatePlayerChips(string username, int newAmount)
         {
-            return con;
+            string sql = "UPDATE users SET chips = @newAmount WHERE username = @username";
+            using var cmd = new MySqlCommand(sql, con);
+            cmd.Parameters.AddWithValue("@newAmount", newAmount);
+            cmd.Parameters.AddWithValue("@username", username);  
+            cmd.ExecuteNonQuery();
+        }
+
+        public void registerPlayer(string username, string password)
+        {
+            var sql = "INSERT INTO users(username, password) VALUES(@username, @password)";
+            using var cmd = new MySqlCommand(sql, con);
+            cmd.Parameters.AddWithValue("@username", username);
+            cmd.Parameters.AddWithValue("@password", password);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
         }
 
         public void close()

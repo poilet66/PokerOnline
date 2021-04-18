@@ -4,8 +4,12 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
+using System.Resources;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
@@ -13,13 +17,26 @@ namespace Poker_Online
 {
     public partial class Form1 : Form
     {
-        int raiseAmount = 0;
-        int playersPlaying = 2;
-        Choice menuBoxChoice;
-        bool betMenuOpen = false;
-        DatabaseHandler db;
-        Player player;
-        Game game;
+        /**
+         * =============================
+         * Fields
+         * =============================
+         **/
+        //this is used to know where to place player's cards
+        public static readonly List<Tuple<int,int>> playerLocations = new List<Tuple<int, int>> { Tuple.Create(86,468), Tuple.Create(150,80), Tuple.Create(424, 75), Tuple.Create(720, 150), Tuple.Create(750, 350) };
+        private int raiseAmount = 0;
+        public Choice menuBoxChoice;
+        private bool betMenuOpen = false;
+        private DatabaseHandler db;
+        private System.Timers.Timer timer;
+        private Player player;
+        private Game game;
+
+        /**
+         * =============================
+         * Constructors
+         * =============================
+         **/
         public Form1()
         {
             InitializeComponent();
@@ -27,10 +44,26 @@ namespace Poker_Online
             this.db = new DatabaseHandler(); 
         }
 
+        /**
+         * =============================
+         * General Methods
+         * =============================
+         **/
+        public void updatePlayerChips(string user, int newAmount)
+        {
+            db.updatePlayerChips(user, newAmount);
+        }
+
         private void Form1_Closing(object sender, EventArgs e)
         {
             db.close();
         }
+
+        /**
+         * =============================
+         * Event Handlers
+         * =============================
+         **/
 
         private void newUserButton_Click(object sender, EventArgs e)
         {
@@ -56,17 +89,39 @@ namespace Poker_Online
         private void loginButton_Click(object sender, EventArgs e)
         {
             loginLabel.Hide();
-            if(!db.userExists("users",userNameTextbox.Text,passwordTextBox.Text))
+            if(!db.userExists(userNameTextbox.Text,passwordTextBox.Text))
             {
                 loginLabel.Text = "That username and password does not exist! Check your credentials";
                 loginLabel.Show();
                 return;
             }
-            this.player = new Player(this, db.getUserChips(userNameTextbox.Text));
+            this.player = new Player(this, db.getUserChips(userNameTextbox.Text), userNameTextbox.Text); //create our sessions player object
+            player.setChips(db.getUserChips(player.getUsername())); //restore player chips saved in database
             playerChipLabel.Text = "You have " + player.getChips() + " chips";
             pageHandler.SelectedTab = loggedInMainScreen;
             trackBar2.Minimum = 2;
             trackBar2.Maximum = 5;
+        }
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            raiseChipsLbl.Text = "" + trackBar1.Value;
+            raiseAmount = trackBar1.Value;
+        }
+
+        private void raiseButton_Click(object sender, EventArgs e)
+        {
+            menuBoxChoice = new Raise(trackBar1.Value);
+        }
+
+        private void callButton_Click(object sender, EventArgs e)
+        {
+            menuBoxChoice = new Call();
+        }
+
+        private void foldButton_Click(object sender, EventArgs e)
+        {
+            menuBoxChoice = new Fold();
+
         }
 
         private void signupRegisterButton_Click(object sender, EventArgs e)
@@ -107,29 +162,40 @@ namespace Poker_Online
                 return;
             }
 
-            var sql = "INSERT INTO users(username, password) VALUES(@username, @password)";
-            using var cmd = new MySqlCommand(sql, db.getConnection());
-            cmd.Parameters.AddWithValue("@username", signupUserTextbox.Text);
-            cmd.Parameters.AddWithValue("@password", signupPasswordTextbox.Text);
-            cmd.Prepare();  
-            cmd.ExecuteNonQuery();
+            db.registerPlayer(signupUserTextbox.Text, signupPasswordTextbox.Text);
 
             signupUserTextbox.Text = "";
             signupPasswordTextbox.Text = "";
             signupStatusLabel.Text = "Account registered!";
             signupStatusLabel.Show();
         }
+        private void trackBar2_Scroll(object sender, EventArgs e)
+        {
+            playerCountLbl.Text = trackBar2.Value.ToString() + " players playing";
+        }
 
+        private void startGameButton_Click(object sender, EventArgs e)
+        {
+            pageHandler.SelectedTab = gameScreen;
+            this.game = new Game(50, trackBar2.Value, player);
+        }
+
+        /**
+         * =============================
+         * Utility Methods
+         * =============================
+         **/
         public Choice getPlayerChoice(Player player)
         {
             menuBox.Show();
-            betMenuOpen = true;
+            betMenuOpen = true; 
             setButtonsInMenu(true);
             trackBar1.Minimum = player.getGame().getCurrentBetToPlay();
             trackBar1.Maximum = player.getChips();
-            while(menuBoxChoice == null) //wait until a choice has been made, not sure if this is the best way to do things maybe add a short delay in
+            while(menuBoxChoice == null)
             {
-                continue;
+                var t = Task.Delay(1000); //wait a bit before checking again
+                t.Wait();
             }
             setButtonsInMenu(false);
             menuBox.Hide();
@@ -143,28 +209,8 @@ namespace Poker_Online
             var t = Task.Delay(5000); //wait 5 seconds and change back to main screen
             t.Wait();
             winnerLbl.Hide();
+            playerChipLabel.Text = "You have " + player.getChips() + " chips"; //update player chips in game too
             pageHandler.SelectedTab = loggedInMainScreen;
-        }
-
-        private void trackBar1_Scroll(object sender, EventArgs e)
-        {
-            raiseChipsLbl.Text = "" + trackBar1.Value;
-            raiseAmount = trackBar1.Value;
-        }
-
-        private void raiseButton_Click(object sender, EventArgs e)
-        {
-            menuBoxChoice = new Raise(trackBar1.Value);
-        }
-
-        private void callButton_Click(object sender, EventArgs e)
-        {
-            menuBoxChoice = new Call();
-        }
-
-        private void foldButton_Click(object sender, EventArgs e)
-        {
-            menuBoxChoice = new Fold();
         }
 
         private void setButtonsInMenu(bool enabled)
@@ -179,22 +225,47 @@ namespace Poker_Online
             }
         }
 
-        private void trackBar2_Scroll(object sender, EventArgs e)
+        //Method used to show players' cards, if 'blank' bool is set to true, it will only show the backsides of cards and if set to false, will show the cards actual pictures
+        public void showPlayersCards(Game game, bool blank)
         {
-            playerCountLbl.Text = trackBar2.Value.ToString() + " players playing";
+            int count = 0;
+            int cardXOffset = 0;
+            foreach (IPlayer player in game.getPlayers())
+            {
+                if (typeof(AIPlayer).IsInstanceOfType(player))
+                {
+                    cardXOffset = 0;
+                    foreach (Card card in player.getOriginalHand().getCards())
+                    {
+                        Tuple<int, int> loc = playerLocations[count];
+                        PictureBox box = new PictureBox();
+                        box.Size = new System.Drawing.Size(50, 80); //create box size of the images
+                        box.SizeMode = PictureBoxSizeMode.StretchImage;
+                        box.Location = new Point(loc.Item1 + cardXOffset, loc.Item2);
+                        box.Visible = true;
+                        box.Image = (blank) ? Image.FromFile( System.AppDomain.CurrentDomain.BaseDirectory + @"Images\blankcard.png") : Image.FromFile(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\" + card.getFileName() + ".png"); //Get card image, either blank or actual
+                        gameScreen.Controls.Add(box);
+                        cardXOffset += 50 + 10; //shift card over to the right so cards dont overlap, have 10 pixel 'buffer' between
+                    }
+                    count++;
+                }
+                else //if an actual player just draw their cards dont bother blanking them out
+                {
+                    cardXOffset = 0;
+                    foreach(Card card in player.getOriginalHand().getCards())
+                    {
+                        PictureBox box = new PictureBox();
+                        box.Size = new System.Drawing.Size(50, 80); //create box size of the images
+                        box.SizeMode = PictureBoxSizeMode.StretchImage;
+                        box.Location = new Point(340 + cardXOffset, 562);
+                        box.Visible = true;
+                        box.Image = Image.FromFile(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\" + card.getFileName() + ".png"); //Get card image, either blank or actual
+                        gameScreen.Controls.Add(box);
+                        cardXOffset += 50 + 10; //shift card over to the right so cards dont overlap, have 10 pixel 'buffer' between
+                    }
+                }
+            }
         }
 
-        private void startGameButton_Click(object sender, EventArgs e)
-        {
-            pageHandler.SelectedTab = gameScreen;
-            this.game = new Game(50, trackBar2.Value, player);
-            
-            //TODO: do all the GUI stuff such as player card icons here
-        }
-
-        public void startGame(Game game)
-        {
-            
-        }
     }
 }

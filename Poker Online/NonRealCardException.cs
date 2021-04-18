@@ -8,6 +8,11 @@ namespace Poker_Online
 {
     class NonRealCardException : Exception
     {
+        /**
+         * =============================
+         * Constructors
+         * =============================
+         **/
         public NonRealCardException()
         {
         }
